@@ -12,7 +12,7 @@ Level 3: Eva     — external signals → mutations to any repo
 
 ## Quick reference
 
-- **Language**: Python 3.10+
+- **Language**: Python 3.13+
 - **CLI framework**: Click
 - **Package layout**: `src/curator/`
 - **Entry point**: `curator.cli:main`

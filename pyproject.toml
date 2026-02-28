@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Level 2 evolution — cross-agent pattern detection and shared skill updates for iEvo marketplace"
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 authors = [{ name = "iEvo", email = "denis@27tech.co" }]
 
 dependencies = [
@@ -28,11 +28,14 @@ dev = [
 [project.scripts]
 curator = "curator.cli:main"
 
+[tool.uv]
+python = ">=3.13"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/curator"]
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py313"
 line-length = 100
 
 [tool.ruff.lint]
