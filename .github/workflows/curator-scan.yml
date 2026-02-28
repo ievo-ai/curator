@@ -1,0 +1,49 @@
+name: Curator Scan
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 06:00 UTC
+  workflow_dispatch:
+  repository_dispatch:
+    types: [curator-scan]
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout curator
+        uses: actions/checkout@v4
+
+      - name: Checkout marketplace
+        uses: actions/checkout@v4
+        with:
+          repository: ievo-ai/marketplace
+          path: marketplace
+          token: ${{ secrets.IEVO_BOT_TOKEN }}
+
+      - name: Build Docker image
+        run: docker build -t curator .
+
+      - name: Run Curator scan (dry-run)
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}/marketplace:/marketplace:ro \
+            curator scan \
+              --marketplace /marketplace \
+              --dry-run
+
+      # Live mode (uncomment when ready):
+      # - name: Run Curator scan (live)
+      #   env:
+      #     CURATOR_GITHUB_TOKEN: ${{ secrets.IEVO_BOT_TOKEN }}
+      #   run: |
+      #     docker run --rm \
+      #       -e CURATOR_GITHUB_TOKEN \
+      #       -v ${{ github.workspace }}/marketplace:/marketplace:ro \
+      #       curator scan \
+      #         --marketplace /marketplace \
+      #         --live

@@ -1,0 +1,10 @@
+# Curator configuration
+# See docs/configuration.md for full reference
+
+marketplace_repo: ievo-ai/marketplace
+min_agents_for_pattern: 2
+min_entries_for_pattern: 2
+min_confidence: 0.3
+max_proposals_per_run: 5
+dry_run: true
+auto_merge: false

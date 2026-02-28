@@ -1,0 +1,36 @@
+name: curator
+display_name: "Curator — Cross-Agent Evolution"
+version: 0.1.0
+description: "Level 2 evolution — detects cross-agent patterns in marketplace evolution logs and proposes shared skill updates."
+author: "iEvo"
+license: MIT
+category: core
+
+model:
+  primary: sonnet
+  fallback: haiku
+  min_tier: haiku
+
+tags:
+  - evolution
+  - cross-agent
+  - marketplace
+  - pattern-detection
+  - shared-skills
+
+dependencies: []
+
+disclosure:
+  l1_meta: agent.yaml
+  l2_instructions: ROLE.md
+  l3_resources:
+    - memory/CONTEXT.md
+    - memory/DECISIONS.md
+    - memory/VOCABULARY.md
+    - memory/HISTORY.md
+  l4_skills:
+    - skills/evo/SKILL.md
+
+docs:
+  readme: ../../README.md
+  reference: ../../docs/
