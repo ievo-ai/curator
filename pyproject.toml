@@ -28,8 +28,12 @@ dev = [
 [project.scripts]
 curator = "curator.cli:main"
 
-[tool.uv]
-python = ">=3.13"
+[dependency-groups]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "ruff>=0.1",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/curator"]
