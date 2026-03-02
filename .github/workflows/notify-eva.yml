@@ -37,7 +37,7 @@ jobs:
         if: steps.pr.outputs.skip != 'true'
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.EVA_DISPATCH_TOKEN }}
+          token: ${{ secrets.EVA_PAT_GITHUB_TOKEN }}
           repository: ievo-ai/eva
           event-type: review-pr
           client-payload: >
