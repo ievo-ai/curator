@@ -1,0 +1,49 @@
+# Notify Eva when PR tests pass — she reviews and merges
+name: Request Eva Review
+
+on:
+  workflow_run:
+    workflows: ["Tests"]
+    types: [completed]
+
+jobs:
+  notify:
+    name: Dispatch to Eva
+    runs-on: ubuntu-latest
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request'
+
+    steps:
+      - name: Find PR number
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          PR_NUM=$(gh api "repos/${{ github.repository }}/pulls?state=open" \
+            --jq ".[] | select(.head.sha == \"$HEAD_SHA\") | .number" \
+            | head -1)
+          DRAFT=$(gh api "repos/${{ github.repository }}/pulls/$PR_NUM" --jq '.draft' 2>/dev/null || echo "false")
+
+          if [ -z "$PR_NUM" ] || [ "$DRAFT" = "true" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "number=$PR_NUM" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Dispatch to Eva
+        if: steps.pr.outputs.skip != 'true'
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.EVA_DISPATCH_TOKEN }}
+          repository: ievo-ai/eva
+          event-type: review-pr
+          client-payload: >
+            {
+              "repo": "${{ github.repository }}",
+              "pr_number": ${{ steps.pr.outputs.number }},
+              "head_sha": "${{ github.event.workflow_run.head_sha }}",
+              "triggered_by": "${{ github.event.workflow_run.triggering_actor.login }}"
+            }
